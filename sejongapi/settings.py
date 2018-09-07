@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
-import os
+import os, datetime
 import django_heroku
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'rest_framework',
+
+    'apps.authentication',
 ]
 
 MIDDLEWARE = [
@@ -121,5 +123,14 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+AUTH_USER_MODEL = 'authentication.User'
+
+
+JWT_AUTH = {
+    'JWT_ALLOW_REFRESH': True,
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(hours=1),
+    'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=7),
+}
 
 django_heroku.settings(locals())
