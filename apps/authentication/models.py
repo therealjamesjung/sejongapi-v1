@@ -1,7 +1,9 @@
 from django.db import models
+from django.contrib import admin
 from django.contrib.auth.models import AbstractBaseUser
 
 from .managers import UserManager
+
 
 
 class User(AbstractBaseUser):
@@ -19,3 +21,11 @@ class User(AbstractBaseUser):
 
     def __str__(self):
         return self.username
+
+    def has_perm(self, perm, obj=None):
+        return True
+
+    def has_module_perms(self, app_label):
+        return True
+
+admin.site.register(User)
