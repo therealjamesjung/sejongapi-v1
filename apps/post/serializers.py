@@ -1,10 +1,10 @@
 from rest_framework import serializers
 
-from .models import Post
+from .models import Article
 
 
-class PostSerializer(serializers.Serializer):
+class ArticleSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Post
+        model = Article
         fields = '__all__'
-        read_only_fields = ('author', )
+        read_only_fields = ('writer',)

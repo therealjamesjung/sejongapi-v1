@@ -1,15 +1,18 @@
 from django.db import models
 from django.conf import settings
+from django.contrib import admin
 
-class Post(models.model):
+class Article(models.Model):
     writer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete = models.CASCADE)
     title = models.CharField(max_length = 200)
     content = models.TextField()
 
-    upvote = models.IntegerField(default = 0)
-    downvote = models.IntegerField(default = 0)
+    upvoted = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete = models.CASCADE, blank = True, null = True, related_name = 'upvoted')
+    downvoted = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete = models.CASCADE, blank = True, null = True, related_name = 'downvoted')
 
     is_pinned = models.BooleanField(default = False)
 
     def __str__(self):
         return self.title
+
+admin.site.register(Article)
