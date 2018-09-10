@@ -9,6 +9,7 @@ djangorestframework = "*"
 "psycopg2" = "*"
 gunicorn = "*"
 django-heroku = "*"
+djangorestframework-jwt = "*"
 
 [dev-packages]
 pylint = "*"
