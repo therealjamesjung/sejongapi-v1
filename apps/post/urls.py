@@ -1,7 +1,8 @@
 from django.urls import path, include
 
-from .views import ArticleListCreateAPIView
+from .views import ArticleCreateAPIView, ArticleListAPIView
 
 urlpatterns = [
-    path('post/', ArticleListCreateAPIView.as_view()),
+    path('post/', ArticleCreateAPIView.as_view()),
+    path('post/<article_pk>/', ArticleListAPIView.as_view()),
 ]
