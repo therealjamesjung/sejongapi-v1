@@ -4,9 +4,9 @@ from rest_framework_jwt.views import obtain_jwt_token, refresh_jwt_token
 
 from .views import RegistrationAPIView
 
-app_name = 'auth'
+app_name = 'authentication'
 urlpatterns = [
-    path('auth/register/', RegistrationAPIView.as_view()),
-    path('auth/login/', obtain_jwt_token),
-    path('auth/refresh/', refresh_jwt_token),
+    path('users/signup/', RegistrationAPIView.as_view()),
+    path('users/login/', obtain_jwt_token),
+    path('users/refresh/', refresh_jwt_token),
 ]
