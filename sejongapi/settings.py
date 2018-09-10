@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'rest_framework',
 
     'apps.authentication',
+    'apps.post',
 ]
 
 MIDDLEWARE = [
@@ -134,3 +135,8 @@ JWT_AUTH = {
 }
 
 django_heroku.settings(locals())
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 100
+}
