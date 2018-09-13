@@ -19,7 +19,7 @@ class Comment(models.Model):
     writer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete = models.CASCADE)
     content = models.TextField()
     post = models.ForeignKey('post.Article', on_delete = models.CASCADE)
-    parent = models.ForeignKey('post.Comment', on_delete = models.CASCADE)
+    parent = models.ForeignKey('post.Comment', on_delete = models.CASCADE, blank = True, null = True)
 
 admin.site.register(Article)
 admin.site.register(Comment)
