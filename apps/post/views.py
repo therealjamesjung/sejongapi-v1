@@ -65,6 +65,15 @@ class ArticleRetrieveUpdateDeleteCommentCreateAPIView(mixins.CreateModelMixin, g
         else:
             raise AuthenticationFailed('You are not authorized to delete this post')
 
+class CommentListAPIView(generics.ListAPIView):
+    serializer_class = CommentSerializer
+    lookup_url_kwarg = 'article_pk'
+
+    def get_queryset(self):
+        article_pk = self.kwargs.get('article_pk')
+        queryset = Comment.objects.filter(post_id = article_pk)
+        return queryset
+
 class CommentUpdateDeleteAPIView(mixins.DestroyModelMixin, generics.UpdateAPIView):
     serializer_class = CommentSerializer
     lookup_url_kwarg = 'comment_pk'
