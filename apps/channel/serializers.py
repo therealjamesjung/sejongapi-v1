@@ -5,7 +5,14 @@ from apps.profile.serializers import ProfileSerializer
 from .models import Channel
 
 
-class ChannelSerializer(serializers.ModelSerializer):
+class ChannelCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Channel
+        fields = ('name', 'description', 'rules', 'moderators', )
+
+class ChannelRetrieveSerializer(serializers.ModelSerializer):
+    moderators = ProfileSerializer(many=True)
+
     class Meta:
         model = Channel
         fields = ('name', 'description', 'rules', 'moderators', )
