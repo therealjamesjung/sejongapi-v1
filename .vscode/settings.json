@@ -1,3 +1,6 @@
 {
-    "python.pythonPath": "/Users/pellstrike/.local/share/virtualenvs/sejongapi-m-Om7Cth/bin/python"
+    "python.pythonPath": "/Users/pellstrike/.local/share/virtualenvs/sejongapi-m-Om7Cth/bin/python",
+    "python.linting.pylintArgs": [
+        "--load-plugins pylint_django",
+    ]
 }

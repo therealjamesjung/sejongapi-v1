@@ -1,9 +1,11 @@
 from django.db import models
-from django.contrib import admin
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.contrib.auth.models import AbstractBaseUser
 
-from .managers import UserManager
+from apps.profile.models import Profile
 
+from .managers import UserManager
 
 
 class User(AbstractBaseUser):
@@ -21,3 +23,9 @@ class User(AbstractBaseUser):
 
     def __str__(self):
         return self.username
+
+
+@receiver(post_save, sender=User)
+def create_profile(sender, instance, created, *args, **kwargs):
+    if instance and created:
+        instance.profile = Profile.objects.create(user=instance)
