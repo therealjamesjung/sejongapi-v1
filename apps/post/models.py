@@ -10,6 +10,8 @@ class Article(models.Model):
     upvoted = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete = models.CASCADE, blank = True, null = True, related_name = 'upvoted')
     downvoted = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete = models.CASCADE, blank = True, null = True, related_name = 'downvoted')
 
+    channel = models.ForeignKey('channel.Channel', on_delete = models.CASCADE)
+
     is_pinned = models.BooleanField(default = False)
 
     def __str__(self):
