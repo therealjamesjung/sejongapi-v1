@@ -5,15 +5,19 @@ from rest_framework.exceptions import AuthenticationFailed, NotFound
 
 from .models import Article, Comment
 from .serializers import ArticleSerializer, CommentSerializer
+from apps.channel.models import Channel
 
 class ArticleCreateAPIView(generics.CreateAPIView):
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
+    lookup_url_kwarg = 'channel_pk'
 
     def create(self, request, *args, **kwargs):
+        channel_pk = self.kwargs.get('channel_pk')
+
         serializer = self.serializer_class(data = request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save(writer = request.user, upvoted = None, downvoted = None)
+        serializer.save(writer = request.user, upvoted = None, downvoted = None, channel_id = channel_pk)
         return Response(serializer.data, status = status.HTTP_201_CREATED)
 
 
