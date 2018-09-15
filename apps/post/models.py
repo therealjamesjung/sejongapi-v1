@@ -1,6 +1,5 @@
 from django.db import models
 from django.conf import settings
-from django.contrib import admin
 
 class Article(models.Model):
     writer = models.ForeignKey('profile.Profile', on_delete = models.CASCADE)
@@ -22,6 +21,3 @@ class Comment(models.Model):
     content = models.TextField()
     post = models.ForeignKey('post.Article', on_delete = models.CASCADE)
     parent = models.ForeignKey('post.Comment', on_delete = models.CASCADE, blank = True, null = True)
-
-admin.site.register(Article)
-admin.site.register(Comment)
