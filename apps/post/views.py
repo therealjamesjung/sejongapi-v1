@@ -40,14 +40,12 @@ class ArticleRetrieveUpdateDeleteCommentCreateAPIView(mixins.CreateModelMixin, g
     def get_queryset(self):
         article_pk = self.kwargs.get('article_pk')
         queryset = Article.objects.filter(id = article_pk)
+        if not queryset:
+            raise NotFound('A Article with this primary key does not exists')
         return queryset
 
     def update(self, request, article_pk = None, *args, **kwargs):
-        try:
-            serializer_instance = self.get_queryset()
-        except:
-            raise NotFound('A post with this primary key does not exist.') # TODO: this exception does not works
-
+        serializer_instance = self.get_queryset()
         partial = kwargs.pop('partial', False)
         serializer_instance = self.get_object()
         if serializer_instance.writer_id == request.user.id:
