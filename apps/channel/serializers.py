@@ -6,9 +6,12 @@ from .models import Channel
 
 
 class ChannelCreateSerializer(serializers.ModelSerializer):
+    moderators = ProfileSerializer(many=True, read_only=True)
+
     class Meta:
         model = Channel
         fields = ('name', 'description', 'rules', 'moderators', )
+
 
 class ChannelRetrieveSerializer(serializers.ModelSerializer):
     moderators = ProfileSerializer(many=True)
@@ -16,3 +19,10 @@ class ChannelRetrieveSerializer(serializers.ModelSerializer):
     class Meta:
         model = Channel
         fields = ('name', 'description', 'rules', 'moderators', )
+
+        
+class ChannelUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Channel
+        fields = ('name', 'description', 'rules', 'moderators', )
+
