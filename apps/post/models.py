@@ -3,7 +3,7 @@ from django.conf import settings
 from django.contrib import admin
 
 class Article(models.Model):
-    writer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete = models.CASCADE)
+    writer = models.ForeignKey('profile.Profile', on_delete = models.CASCADE)
     title = models.CharField(max_length = 200)
     content = models.TextField()
 

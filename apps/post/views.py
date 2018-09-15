@@ -22,7 +22,7 @@ class ArticleListCreateAPIView(generics.ListCreateAPIView):
         channel_pk = self.kwargs.get('channel_pk')
         serializer = self.serializer_class(data = request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save(writer = request.user, upvoted = None, downvoted = None, channel_id = channel_pk)
+        serializer.save(writer = request.user.profile, upvoted = None, downvoted = None, channel_id = channel_pk)
         return Response(serializer.data, status = status.HTTP_201_CREATED)
 
 
@@ -60,7 +60,7 @@ class ArticleRetrieveUpdateDeleteCommentCreateAPIView(mixins.CreateModelMixin, g
         article_pk = self.kwargs.get('article_pk')
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save(writer = request.user, post_id = article_pk)
+        serializer.save(writer = request.user.profile, post_id = article_pk)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
