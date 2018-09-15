@@ -1,20 +1,25 @@
 from rest_framework import generics, mixins, status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.exceptions import AuthenticationFailed, NotFound
+from rest_framework.exceptions import PermissionDenied, NotFound
 
 from .models import Article, Comment
 from .serializers import ArticleSerializer, CommentSerializer
 from apps.channel.models import Channel
 
-class ArticleCreateAPIView(generics.CreateAPIView):
-    queryset = Article.objects.all()
+class ArticleListCreateAPIView(generics.ListCreateAPIView):
     serializer_class = ArticleSerializer
     lookup_url_kwarg = 'channel_pk'
 
+    def get_queryset(self):
+        channel_pk = self.kwargs.get('channel_pk')
+        queryset = Article.objects.filter(channel_id = channel_pk)
+        if not queryset:
+            raise NotFound('A Channel with this primary key does not exists')
+        return queryset
+
     def create(self, request, *args, **kwargs):
         channel_pk = self.kwargs.get('channel_pk')
-
         serializer = self.serializer_class(data = request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save(writer = request.user, upvoted = None, downvoted = None, channel_id = channel_pk)
@@ -51,7 +56,7 @@ class ArticleRetrieveUpdateDeleteCommentCreateAPIView(mixins.CreateModelMixin, g
             self.perform_update(serializer)
             return Response(serializer.data, status = status.HTTP_200_OK)
         else:
-            raise AuthenticationFailed('You are not authorized to update this post')
+            raise PermissionDenied('You are not authorized to update this post')
 
     def post(self, request, *args, **kwargs):
         article_pk = self.kwargs.get('article_pk')
@@ -67,7 +72,7 @@ class ArticleRetrieveUpdateDeleteCommentCreateAPIView(mixins.CreateModelMixin, g
             self.perform_destroy(serializer_instance)
             return Response(status = status.HTTP_204_NO_CONTENT)
         else:
-            raise AuthenticationFailed('You are not authorized to delete this post')
+            raise PermissionDenied('You are not authorized to delete this post')
 
 class CommentListAPIView(generics.ListAPIView):
     serializer_class = CommentSerializer
@@ -100,11 +105,11 @@ class CommentUpdateDeleteAPIView(mixins.DestroyModelMixin, generics.UpdateAPIVie
             self.perform_update(serializer)
             return Response(serializer.data, status = status.HTTP_200_OK)
         else:
-            raise AuthenticationFailed('You are not authorized to update this comment')
+            raise PermissionDenied('You are not authorized to update this comment')
     def delete(self, request, comment_pk = None, *args, **kwargs):
         serializer_instance = self.get_object()
         if serializer_instance.writer_id == request.user.id:
             self.perform_destroy(serializer_instance)
             return Response(status = status.HTTP_204_NO_CONTENT)
         else:
-            raise AuthenticationFailed('You are not authorized to delete this comment')
+            raise PermissionDenied('You are not authorized to delete this comment')
