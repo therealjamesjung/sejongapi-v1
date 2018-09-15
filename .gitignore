@@ -6,7 +6,6 @@ __pycache__/
 local_settings.py
 db.sqlite3
 media
-apps/post/migrations/
 
 ### VS Code ###
 .vscode/

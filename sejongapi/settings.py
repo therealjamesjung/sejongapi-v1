@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'apps.authentication',
     'apps.profile',
     'apps.channel',
+    'apps.post',
 ]
 
 MIDDLEWARE = [
