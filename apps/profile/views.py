@@ -9,7 +9,7 @@ from .serializers import ProfileSerializer
 
 
 class ProfileRetrieveAPIView(RetrieveAPIView):
-    queryset = Profile.objects.select_related('user')
+    queryset = Profile.objects.all()
     permission_classes = (IsAuthenticated, )
     serializer_class = ProfileSerializer
 
@@ -24,7 +24,7 @@ class ProfileRetrieveAPIView(RetrieveAPIView):
 
 
 class ProfileRetrieveUpdateAPIView(RetrieveUpdateAPIView):
-    queryset = Profile.objects.select_related('user')
+    queryset = Profile.objects.all()
     permission_classes = (IsAuthenticated, )
     serializer_class = ProfileSerializer
 
