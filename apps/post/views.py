@@ -16,7 +16,7 @@ class ArticleListCreateAPIView(generics.ListCreateAPIView):
         channel_pk = self.kwargs.get('channel_pk')
         queryset = Article.objects.filter(channel_id=channel_pk)
         if not queryset:
-            raise NotFound('A Channel with this primary key does not exists')
+            raise NotFound('A Channel with this primary key does not exists, or There are no articles on this Channel.')
         return queryset
 
     def create(self, request, *args, **kwargs):
