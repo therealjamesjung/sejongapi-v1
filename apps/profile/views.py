@@ -7,6 +7,7 @@ from rest_framework import status
 from .models import Profile
 from .serializers import ProfileSerializer, FollowerSerializer
 
+
 class ProfileRetrieveAPIView(RetrieveAPIView):
     queryset = Profile.objects.all()
     permission_classes = (IsAuthenticated, )
@@ -47,13 +48,14 @@ class ProfileRetrieveUpdateAPIView(RetrieveUpdateAPIView):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+
 class FollowUpdateAPIView(UpdateAPIView):
     serializer_class = FollowerSerializer
     lookup_url_kwarg = 'user_pk'
 
     def get_queryset(self):
         user_pk = self.kwargs.get('user_pk')
-        queryset = Profile.objects.filter(user_id = user_pk)
+        queryset = Profile.objects.filter(user_id=user_pk)
         return queryset
 
     def update(self, request, *args, **kwargs):
@@ -67,14 +69,16 @@ class FollowUpdateAPIView(UpdateAPIView):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+
 class UnfollowUpdateAPIView(UpdateAPIView):
     serializer_class = FollowerSerializer
     lookup_url_kwarg = 'user_pk'
 
     def get_queryset(self):
         user_pk = self.kwargs.get('user_pk')
-        queryset = Profile.objects.filter(user_id = user_pk)
+        queryset = Profile.objects.filter(user_id=user_pk)
         return queryset
+
     def update(self, request, *args, **kwargs):
         serializer_instance = self.get_object()
         for data in serializer_instance.get_followers().all():

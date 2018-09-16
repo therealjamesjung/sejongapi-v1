@@ -19,10 +19,10 @@ class ProfileSerializer(serializers.ModelSerializer):
 
         # TODO: Add default 'blank' avatar url
         return ''
+        
 
 class FollowerSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Profile
-        fields = ('followers',)
-        read_only_fields = ('user',)
+        fields = ('followers', )
+        read_only_fields = ('user', )
