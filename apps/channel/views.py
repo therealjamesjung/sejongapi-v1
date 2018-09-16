@@ -15,7 +15,10 @@ class ChannelCreateAPIView(CreateAPIView):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save(moderators=request.data.get('moderators', { request.user.profile }))
+        serializer.save(
+            moderators=request.data.get('moderators', { request.user.profile }),
+            subscribers=request.data.get('subscribers', { request.user.profile })
+        )
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
@@ -31,6 +34,9 @@ class ChannelRetrieveUpdateAPIView(RetrieveUpdateAPIView):
         except Channel.DoesNotExist:
             raise NotFound('A channel with this pk does not found.')
 
+        if request.user.profile in channel.blacklist.all():
+            raise PermissionDenied('This user does not have permission to view this channel.')
+
         serializer = self.retrieve_serializer_class(channel)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -42,6 +48,9 @@ class ChannelRetrieveUpdateAPIView(RetrieveUpdateAPIView):
 
         if not request.user.profile in channel.moderators.all():
             raise PermissionDenied('This user does not have permission to update this channel.')
+
+        if request.user.profile in channel.blacklist.all():
+            raise PermissionDenied('This user does not have permission to view this channel.')
 
         serializer = self.update_serializer_class(channel, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
