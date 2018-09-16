@@ -41,11 +41,10 @@ class ArticleRetrieveUpdateDeleteCommentCreateAPIView(mixins.CreateModelMixin, g
         article_pk = self.kwargs.get('article_pk')
         queryset = Article.objects.filter(id = article_pk)
         if not queryset:
-            raise NotFound('A Article with this primary key does not exists')
+            raise NotFound('An Article with this primary key does not exists')
         return queryset
 
     def update(self, request, article_pk = None, *args, **kwargs):
-        serializer_instance = self.get_queryset()
         partial = kwargs.pop('partial', False)
         serializer_instance = self.get_object()
         if serializer_instance.writer_id == request.user.id:
@@ -79,6 +78,8 @@ class CommentListAPIView(generics.ListAPIView):
     def get_queryset(self):
         article_pk = self.kwargs.get('article_pk')
         queryset = Comment.objects.filter(post_id = article_pk)
+        if not queryset:
+            raise NotFound('There are no comments on this article.')
         return queryset
 
 class CommentUpdateDeleteAPIView(mixins.DestroyModelMixin, generics.UpdateAPIView):
@@ -88,13 +89,11 @@ class CommentUpdateDeleteAPIView(mixins.DestroyModelMixin, generics.UpdateAPIVie
     def get_queryset(self):
         comment_pk = self.kwargs.get('comment_pk')
         queryset = Comment.objects.filter(id = comment_pk)
+        if not queryset:
+            raise NotFound('A Comment with this primary key does not exists')
         return queryset
-    def update(self, request, comment_pk = None, *args, **kwargs):
-        try:
-            serializer_instance = self.get_queryset()
-        except:
-            raise NotFound('A comment with this primary key does not exist.') # TODO: this exception does not works
 
+    def update(self, request, comment_pk = None, *args, **kwargs):
         partial = kwargs.pop('partial', False)
         serializer_instance = self.get_object()
         if serializer_instance.writer_id == request.user.id:
