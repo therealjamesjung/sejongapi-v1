@@ -10,6 +10,7 @@ djangorestframework = "*"
 gunicorn = "*"
 django-heroku = "*"
 djangorestframework-jwt = "*"
+django-cors-headers = "*"
 
 [dev-packages]
 pylint = "*"
