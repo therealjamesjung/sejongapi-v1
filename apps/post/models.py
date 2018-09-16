@@ -7,8 +7,8 @@ class Article(models.Model):
     title = models.CharField(max_length=200)
     content = models.TextField()
 
-    upvoted = models.ForeignKey('profile.Profile', on_delete=models.CASCADE, blank=True, null=True, related_name='upvoted')
-    downvoted = models.ForeignKey('profile.Profile', on_delete=models.CASCADE, blank=True, null=True, related_name='downvoted')
+    upvoted = models.ManyToManyField('profile.Profile', blank=True)
+    downvoted = models.ManyToManyField'profile.Profile', blank=True)
 
     channel = models.ForeignKey('channel.Channel', on_delete=models.CASCADE)
 
