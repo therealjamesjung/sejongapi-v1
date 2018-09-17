@@ -7,11 +7,12 @@ from .models import Article, Comment
 
 class ArticleSerializer(serializers.ModelSerializer):
     writer = ProfileSerializer(read_only=True)
+    channel_name = serializers.CharField(source='channel.name', read_only=True)
 
     class Meta:
         model = Article
-        fields = '__all__'
-        read_only_fields = ('writer', 'channel', )
+        fields = ('channel_name', 'writer', 'title', 'content', 'upvoted', 'downvoted', 'is_pinned', )
+        read_only_fields = ('writer', 'channel_name', )
 
 
 class CommentSerializer(serializers.ModelSerializer):
