@@ -34,10 +34,13 @@ class Article(models.Model):
 
     def delete_downvote(self, profile):
         self.downvoted.remove(profile)
+        
+    def get_number_of_comments(self):
+        return self.comments.count()
 
 
 class Comment(models.Model):
     writer = models.ForeignKey('profile.Profile', on_delete=models.CASCADE)
     content = models.TextField()
-    post = models.ForeignKey('post.Article', on_delete=models.CASCADE)
-    parent = models.ForeignKey('post.Comment', on_delete=models.CASCADE, blank=True, null=True)
+    post = models.ForeignKey('post.Article', on_delete=models.CASCADE, related_name='comments')
+    parent = models.ForeignKey('post.Comment', on_delete=models.CASCADE, blank=True, null=True, related_name='childs')
