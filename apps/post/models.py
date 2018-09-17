@@ -7,8 +7,8 @@ class Article(models.Model):
     title = models.CharField(max_length=200)
     content = models.TextField()
 
-    upvoted = models.ManyToManyField('profile.Profile', blank=True)
-    downvoted = models.ManyToManyField'profile.Profile', blank=True)
+    upvoted = models.ManyToManyField('profile.Profile', blank=True, related_name = 'upvotes')
+    downvoted = models.ManyToManyField('profile.Profile', blank=True, related_name = 'downvotes')
 
     channel = models.ForeignKey('channel.Channel', on_delete=models.CASCADE)
 
@@ -16,6 +16,24 @@ class Article(models.Model):
 
     def __str__(self):
         return self.title
+
+    def get_upvotes(self):
+        return self.upvoted
+
+    def get_downvotes(self):
+        return self.downvoted
+
+    def upvote(self, profile):
+        self.upvoted.add(profile)
+
+    def downvote(self, profile):
+        self.downvoted.add(profile)
+
+    def delete_upvote(self, profile):
+        self.upvoted.remove(profile)
+
+    def delete_downvote(self, profile):
+        self.downvoted.remove(profile)
 
 
 class Comment(models.Model):
