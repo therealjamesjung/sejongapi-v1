@@ -11,6 +11,7 @@ gunicorn = "*"
 django-heroku = "*"
 djangorestframework-jwt = "*"
 django-cors-headers = "*"
+requests = "*"
 
 [dev-packages]
 pylint = "*"
