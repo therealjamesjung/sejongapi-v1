@@ -8,9 +8,11 @@ class ProfileSerializer(serializers.ModelSerializer):
     bio = serializers.CharField(allow_blank=True, required=False)
     avatar = serializers.SerializerMethodField()
 
+    subscriptions = serializers.StringRelatedField(many = True)
+
     class Meta:
         model = Profile
-        fields = ('username', 'bio', 'avatar', 'followers')
+        fields = ('username', 'bio', 'avatar', 'followers', 'subscriptions')
         read_only_fields = ('username', )
 
     def get_avatar(self, obj):
@@ -19,7 +21,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 
         # TODO: Add default 'blank' avatar url
         return ''
-        
+
 
 class FollowerSerializer(serializers.ModelSerializer):
     class Meta:
