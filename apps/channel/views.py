@@ -1,11 +1,11 @@
 from rest_framework.exceptions import NotFound, PermissionDenied
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView, UpdateAPIView
 from rest_framework.response import Response
 from rest_framework import status
 
 from .models import Channel
-from .serializers import ChannelCreateSerializer, ChannelRetrieveSerializer, ChannelUpdateSerializer
+from .serializers import ChannelCreateSerializer, ChannelRetrieveSerializer, ChannelUpdateSerializer, SubscribeSerializer
 
 
 class ChannelListCreateAPIView(ListCreateAPIView):
@@ -57,3 +57,45 @@ class ChannelRetrieveUpdateAPIView(RetrieveUpdateAPIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+class ChannelSubscribeAPIView(UpdateAPIView):
+    serializer_class = SubscribeSerializer
+    lookup_url_kwarg = 'channel_pk'
+
+    def get_queryset(self):
+        channel_pk = self.kwargs.get('channel_pk')
+        queryset = Channel.objects.filter(id = channel_pk)
+        return queryset
+
+    def update(self, request, *args, **kwargs):
+        serializer_instance = self.get_object()
+        for data in serializer_instance.get_subscribers().all():
+            if data == request.user.profile:
+                return Response('You are already subscibing this channel.')
+        serializer_instance.add_subscriber(request.user.profile)
+        serializer = self.get_serializer(serializer_instance, data = request.data, partial = True)
+        serializer.is_valid(raise_exception = True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+
+
+class ChannelUnsubscribeAPIView(UpdateAPIView):
+    serializer_class = SubscribeSerializer
+    lookup_url_kwarg = 'channel_pk'
+    def get_queryset(self):
+        channel_pk = self.kwargs.get('channel_pk')
+        queryset = Channel.objects.filter(id = channel_pk)
+        return queryset
+
+    def update(self, request, *args, **kwargs):
+        serializer_instance = self.get_object()
+        for data in serializer_instance.get_subscribers().all():
+            if data == request.user.profile:
+                serializer_instance.remove_subscriber(request.user.profile)
+                serializer = self.get_serializer(serializer_instance, data = request.data, partial = True)
+                serializer.is_valid(raise_exception = True)
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response('You are already not subscibing this channel.')
