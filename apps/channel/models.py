@@ -1,7 +1,8 @@
 from django.db import models
 
+from apps.utils.models import TimestampedModel
 
-class Channel(models.Model):
+class Channel(TimestampedModel):
     name = models.CharField(max_length=64, unique=True)
     description = models.TextField(blank=True)
     rules = models.TextField(blank=True)

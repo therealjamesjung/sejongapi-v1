@@ -1,8 +1,9 @@
 from django.db import models
 from django.conf import settings
 
+from apps.utils.models import TimestampedModel
 
-class Article(models.Model):
+class Article(TimestampedModel):
     writer = models.ForeignKey('profile.Profile', on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
     content = models.TextField()
@@ -34,12 +35,12 @@ class Article(models.Model):
 
     def delete_downvote(self, profile):
         self.downvoted.remove(profile)
-        
+
     def get_number_of_comments(self):
         return self.comments.count()
 
 
-class Comment(models.Model):
+class Comment(TimestampedModel):
     writer = models.ForeignKey('profile.Profile', on_delete=models.CASCADE)
     content = models.TextField()
     post = models.ForeignKey('post.Article', on_delete=models.CASCADE, related_name='comments')
