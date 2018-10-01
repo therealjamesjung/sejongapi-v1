@@ -3,7 +3,7 @@ from sejongapi.settings.base import *
 import django_heroku
 
 
-DEBUG = True
+DEBUG = False
 
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
