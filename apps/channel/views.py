@@ -1,6 +1,6 @@
 from rest_framework.exceptions import NotFound, PermissionDenied
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.generics import CreateAPIView, RetrieveUpdateAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView
 from rest_framework.response import Response
 from rest_framework import status
 
@@ -8,9 +8,10 @@ from .models import Channel
 from .serializers import ChannelCreateSerializer, ChannelRetrieveSerializer, ChannelUpdateSerializer
 
 
-class ChannelCreateAPIView(CreateAPIView):
+class ChannelListCreateAPIView(ListCreateAPIView):
     permission_classes = (IsAuthenticated, )
     serializer_class = ChannelCreateSerializer
+    queryset = Channel.objects.all()
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
