@@ -12,7 +12,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Profile
-        fields = ('username', 'bio', 'avatar', 'followers', 'subscriptions')
+        fields = ('username', 'bio', 'avatar', 'followers', 'subscriptions', 'id')
         read_only_fields = ('username', )
 
     def get_avatar(self, obj):
