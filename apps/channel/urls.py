@@ -1,6 +1,10 @@
 from django.urls import path
 
-from .views import ChannelListCreateAPIView, ChannelRetrieveUpdateAPIView, ChannelSubscribeAPIView, ChannelUnsubscribeAPIView
+from .views import (
+    ChannelListCreateAPIView,
+    ChannelRetrieveUpdateAPIView,
+    ChannelSubscribeAPIView, ChannelUnsubscribeAPIView
+)
 
 app_name = 'channel'
 urlpatterns = [

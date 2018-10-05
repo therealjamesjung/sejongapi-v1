@@ -1,6 +1,7 @@
-from django.urls import path, include
+from django.urls import path
 
-from .views import ArticleListCreateAPIView, ArticleRetrieveUpdateDeleteCommentCreateAPIView, CommentUpdateDeleteAPIView, CommentListAPIView, ArticleUpvoteAPIView, ArticleDownvoteAPIView
+from .views import ArticleListCreateAPIView, ArticleRetrieveUpdateDeleteCommentCreateAPIView, \
+    CommentUpdateDeleteAPIView, CommentListAPIView, ArticleUpvoteAPIView, ArticleDownvoteAPIView
 
 urlpatterns = [
     path('channels/<int:channel_pk>/posts/', ArticleListCreateAPIView.as_view()),

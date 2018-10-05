@@ -34,4 +34,4 @@ class ChannelUpdateSerializer(serializers.ModelSerializer):
 class SubscribeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Channel
-        fields = ('subscribers', )
+        fields = ('subscribers',)
