@@ -3,13 +3,14 @@ from django.conf import settings
 
 from apps.utils.models import TimestampedModel
 
+
 class Article(TimestampedModel):
     writer = models.ForeignKey('profile.Profile', on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
     content = models.TextField()
 
-    upvoted = models.ManyToManyField('profile.Profile', blank=True, related_name = 'upvotes')
-    downvoted = models.ManyToManyField('profile.Profile', blank=True, related_name = 'downvotes')
+    upvoted = models.ManyToManyField('profile.Profile', blank=True, related_name='upvotes')
+    downvoted = models.ManyToManyField('profile.Profile', blank=True, related_name='downvotes')
 
     channel = models.ForeignKey('channel.Channel', on_delete=models.CASCADE)
 

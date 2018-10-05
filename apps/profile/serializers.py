@@ -8,7 +8,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     bio = serializers.CharField(allow_blank=True, required=False)
     avatar = serializers.SerializerMethodField()
 
-    subscriptions = serializers.StringRelatedField(many = True)
+    subscriptions = serializers.StringRelatedField(many=True)
 
     class Meta:
         model = Profile
