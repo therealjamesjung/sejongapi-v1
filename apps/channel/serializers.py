@@ -30,6 +30,7 @@ class ChannelUpdateSerializer(serializers.ModelSerializer):
         model = Channel
         fields = ('name', 'description', 'rules', 'moderators', 'subscribers', 'blacklist', 'created_at', 'updated_at',)
 
+
 class SubscribeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Channel

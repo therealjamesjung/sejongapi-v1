@@ -21,10 +21,10 @@ class User(AbstractBaseUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'student_id']
 
-    def has_perm(self, perm, obj=None):
+    def has_perm(self):
         return True
 
-    def has_module_perms(self, app_label):
+    def has_module_perms(self):
         return True
 
     def __str__(self):
@@ -32,6 +32,6 @@ class User(AbstractBaseUser):
 
 
 @receiver(post_save, sender=User)
-def create_profile(sender, instance, created, *args, **kwargs):
+def create_profile(instance, created):
     if instance and created:
         instance.profile = Profile.objects.create(user=instance)

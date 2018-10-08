@@ -1,11 +1,9 @@
 from rest_framework import generics, mixins, status
-from rest_framework.views import APIView
-from rest_framework.response import Response
 from rest_framework.exceptions import PermissionDenied, NotFound
+from rest_framework.response import Response
 
 from .models import Article, Comment
 from .serializers import ArticleSerializer, CommentSerializer
-from apps.channel.models import Channel
 
 
 class ArticleListCreateAPIView(generics.ListCreateAPIView):
@@ -23,8 +21,8 @@ class ArticleListCreateAPIView(generics.ListCreateAPIView):
         channel_pk = self.kwargs.get('channel_pk')
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save(writer = request.user.profile, channel_id=channel_pk)
-        return Response(serializer.data, status = status.HTTP_201_CREATED)
+        serializer.save(writer=request.user.profile, channel_id=channel_pk)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
 class ArticleRetrieveUpdateDeleteCommentCreateAPIView(mixins.CreateModelMixin, generics.RetrieveUpdateDestroyAPIView):
@@ -50,11 +48,11 @@ class ArticleRetrieveUpdateDeleteCommentCreateAPIView(mixins.CreateModelMixin, g
             serializer = self.get_serializer(serializer_instance, data=request.data, partial=partial)
             serializer.is_valid(raise_exception=True)
             self.perform_update(serializer)
-            return Response(serializer.data, status = status.HTTP_200_OK)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             raise PermissionDenied('You are not authorized to update this post')
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request):
         article_pk = self.kwargs.get('article_pk')
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -101,17 +99,18 @@ class CommentUpdateDeleteAPIView(mixins.DestroyModelMixin, generics.UpdateAPIVie
             serializer = self.get_serializer(serializer_instance, data=request.data, partial=partial)
             serializer.is_valid(raise_exception=True)
             self.perform_update(serializer)
-            return Response(serializer.data, status = status.HTTP_200_OK)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             raise PermissionDenied('You are not authorized to update this comment')
 
-    def delete(self, request, comment_pk=None, *args, **kwargs):
+    def delete(self, request):
         serializer_instance = self.get_object()
         if serializer_instance.writer_id == request.user.id:
             self.perform_destroy(serializer_instance)
-            return Response(status = status.HTTP_204_NO_CONTENT)
+            return Response(status=status.HTTP_204_NO_CONTENT)
         else:
             raise PermissionDenied('You are not authorized to delete this comment')
+
 
 class ArticleUpvoteAPIView(generics.UpdateAPIView):
     serializer_class = ArticleSerializer
@@ -119,7 +118,7 @@ class ArticleUpvoteAPIView(generics.UpdateAPIView):
 
     def get_queryset(self):
         article_pk = self.kwargs.get('article_pk')
-        queryset = Article.objects.filter(id = article_pk)
+        queryset = Article.objects.filter(id=article_pk)
         return queryset
 
     def update(self, request, *args, **kwargs):
@@ -131,15 +130,16 @@ class ArticleUpvoteAPIView(generics.UpdateAPIView):
             if data == request.user.profile:
                 serializer_instance.delete_downvote(request.user.profile)
                 serializer_instance.upvote(request.user.profile)
-                serializer = self.get_serializer(serializer_instance, data = request.data, partial = True)
-                serializer.is_valid(raise_exception = True)
+                serializer = self.get_serializer(serializer_instance, data=request.data, partial=True)
+                serializer.is_valid(raise_exception=True)
                 serializer.save()
-                return Response(serializer.data , status=status.HTTP_200_OK)
+                return Response(serializer.data, status=status.HTTP_200_OK)
         serializer_instance.upvote(request.user.profile)
-        serializer = self.get_serializer(serializer_instance, data = request.data, partial = True)
-        serializer.is_valid(raise_exception = True)
+        serializer = self.get_serializer(serializer_instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response(serializer.data , status=status.HTTP_200_OK)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 class ArticleDownvoteAPIView(generics.UpdateAPIView):
     serializer_class = ArticleSerializer
@@ -147,7 +147,7 @@ class ArticleDownvoteAPIView(generics.UpdateAPIView):
 
     def get_queryset(self):
         article_pk = self.kwargs.get('article_pk')
-        queryset = Article.objects.filter(id = article_pk)
+        queryset = Article.objects.filter(id=article_pk)
         return queryset
 
     def update(self, request, *args, **kwargs):
@@ -159,12 +159,12 @@ class ArticleDownvoteAPIView(generics.UpdateAPIView):
             if data == request.user.profile:
                 serializer_instance.delete_upvote(request.user.profile)
                 serializer_instance.downvote(request.user.profile)
-                serializer = self.get_serializer(serializer_instance, data = request.data, partial = True)
-                serializer.is_valid(raise_exception = True)
+                serializer = self.get_serializer(serializer_instance, data=request.data, partial=True)
+                serializer.is_valid(raise_exception=True)
                 serializer.save()
-                return Response(serializer.data , status=status.HTTP_200_OK)
+                return Response(serializer.data, status=status.HTTP_200_OK)
         serializer_instance.downvote(request.user.profile)
-        serializer = self.get_serializer(serializer_instance, data = request.data, partial = True)
-        serializer.is_valid(raise_exception = True)
+        serializer = self.get_serializer(serializer_instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
         serializer.save()
-        return Response(serializer.data , status=status.HTTP_200_OK)
+        return Response(serializer.data, status=status.HTTP_200_OK)
