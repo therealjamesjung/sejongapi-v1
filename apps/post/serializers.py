@@ -12,7 +12,7 @@ class ArticleSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Article
-        fields = ('channel_name', 'writer', 'title', 'content', 'upvoted', 'downvoted', 'is_pinned', 'comments_count', 'created_at', 'updated_at',)
+        fields = ('channel_name', 'writer', 'title', 'content', 'upvoted', 'downvoted', 'is_pinned', 'comments_count', 'created_at', 'updated_at', 'id', )
         read_only_fields = ('writer', 'channel_name', 'comments_count', )
 
     def get_comments_count(self, article):
