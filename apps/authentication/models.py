@@ -32,6 +32,6 @@ class User(AbstractBaseUser):
 
 
 @receiver(post_save, sender=User)
-def create_profile(instance, created):
+def create_profile(instance, created, **kwargs):
     if instance and created:
         instance.profile = Profile.objects.create(user=instance)
