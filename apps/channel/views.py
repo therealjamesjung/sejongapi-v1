@@ -16,6 +16,10 @@ class ChannelListCreateAPIView(ListCreateAPIView):
     serializer_class = ChannelCreateSerializer
     queryset = Channel.objects.all()
 
+    def get_queryset(self):
+        queryset = Channel.objects.all()
+        return queryset
+
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -28,14 +32,20 @@ class ChannelListCreateAPIView(ListCreateAPIView):
 
 
 class ChannelRetrieveUpdateAPIView(RetrieveUpdateAPIView):
-    queryset = Channel.objects.all()
     permission_classes = (IsAuthenticated,)
     retrieve_serializer_class = ChannelRetrieveSerializer
     update_serializer_class = ChannelUpdateSerializer
 
+    lookup_url_kwarg = 'channel_slug'
+
+    def get_queryset(self):
+        channel_slug = self.kwargs.get('channel_slug')
+        queryset = Channel.objects.filter(slug=channel_slug)
+        return queryset
+
     def retrieve(self, request, channel_slug=None, *args, **kwargs):
         try:
-            channel = self.queryset.get(slug=channel_slug)
+            channel = get_object_or_404(self.get_queryset())
         except Channel.DoesNotExist:
             raise NotFound('A channel with this slug is not found.')
 
@@ -47,7 +57,7 @@ class ChannelRetrieveUpdateAPIView(RetrieveUpdateAPIView):
 
     def update(self, request, channel_pk=None, *args, **kwargs):
         try:
-            channel = self.queryset.get(pk=channel_pk)
+            channel = get_object_or_404(self.get_queryset())
         except Channel.DoesNotExist:
             raise NotFound('A channel with this slug is not found.')
 
