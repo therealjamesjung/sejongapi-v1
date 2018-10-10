@@ -10,7 +10,7 @@ class Channel(TimestampedModel):
     description = models.TextField(blank=True)
     rules = models.TextField(blank=True)
 
-    slug = models.SlugField(default = slugify(name))
+    slug = models.SlugField(allow_unicode=True)
 
     moderators = models.ManyToManyField('profile.Profile', related_name='moderators')
     subscribers = models.ManyToManyField('profile.Profile', related_name='subscriptions')

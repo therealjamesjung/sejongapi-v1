@@ -26,7 +26,7 @@ class ChannelListCreateAPIView(ListCreateAPIView):
         serializer.save(
             moderators=request.data.get('moderators', {request.user.profile}),
             subscribers=request.data.get('subscribers', {request.user.profile}),
-            slug=slugify(request.data.get('name'))
+            slug=slugify(request.data.get('slug'))
         )
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
