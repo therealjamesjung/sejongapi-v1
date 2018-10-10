@@ -22,7 +22,7 @@ class ChannelRetrieveSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Channel
-        fields = ('name', 'description', 'rules', 'moderators', 'subscribers', 'blacklist', 'created_at', 'updated_at', 'slug')
+        fields = ('name', 'description', 'rules', 'moderators', 'subscribers', 'blacklist', 'created_at', 'updated_at', 'slug', 'id')
 
 
 class ChannelUpdateSerializer(serializers.ModelSerializer):

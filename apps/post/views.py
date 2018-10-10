@@ -5,23 +5,29 @@ from rest_framework.response import Response
 from .models import Article, Comment
 from .serializers import ArticleSerializer, CommentSerializer
 
+from apps.channel.models import Channel
+
+from django.shortcuts import get_object_or_404
 
 class ArticleListCreateAPIView(generics.ListCreateAPIView):
     serializer_class = ArticleSerializer
-    lookup_url_kwarg = 'channel_pk'
+    lookup_url_kwarg = 'channel_slug'
 
     def get_queryset(self):
-        channel_pk = self.kwargs.get('channel_pk')
-        queryset = Article.objects.filter(channel_id=channel_pk)
+        channel_slug = self.kwargs.get('channel_slug')
+        channel_id = get_object_or_404(Channel.objects.filter(slug=channel_slug)).id
+        queryset = Article.objects.filter(channel_id=channel_id)
         if not queryset:
-            raise NotFound('A Channel with this primary key does not exists, or There are no articles on this Channel.')
+            raise NotFound('A Channel with this slug does not exists, or There are no articles on this Channel.')
         return queryset
 
     def create(self, request, *args, **kwargs):
-        channel_pk = self.kwargs.get('channel_pk')
+        channel_slug = self.kwargs.get('channel_slug')
+        channel_id = get_object_or_404(Channel.objects.filter(slug=channel_slug)).id
+        print(channel_id)
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save(writer=request.user.profile, channel_id=channel_pk)
+        serializer.save(writer=request.user.profile, channel_id=channel_id)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
