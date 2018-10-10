@@ -58,7 +58,7 @@ class ArticleRetrieveUpdateDeleteCommentCreateAPIView(mixins.CreateModelMixin, g
         else:
             raise PermissionDenied('You are not authorized to update this post')
 
-    def post(self, request):
+    def post(self, request, article_pk=None):
         article_pk = self.kwargs.get('article_pk')
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
