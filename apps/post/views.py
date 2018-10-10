@@ -3,7 +3,7 @@ from rest_framework.exceptions import PermissionDenied, NotFound
 from rest_framework.response import Response
 
 from .models import Article, Comment
-from .serializers import ArticleSerializer, CommentSerializer
+from .serializers import ArticleSerializer, CommentSerializer, VoteSerializer
 
 from apps.channel.models import Channel
 
@@ -24,7 +24,6 @@ class ArticleListCreateAPIView(generics.ListCreateAPIView):
     def create(self, request, *args, **kwargs):
         channel_slug = self.kwargs.get('channel_slug')
         channel_id = get_object_or_404(Channel.objects.filter(slug=channel_slug)).id
-        print(channel_id)
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save(writer=request.user.profile, channel_id=channel_id)
@@ -109,7 +108,7 @@ class CommentUpdateDeleteAPIView(mixins.DestroyModelMixin, generics.UpdateAPIVie
         else:
             raise PermissionDenied('You are not authorized to update this comment')
 
-    def delete(self, request):
+    def delete(self, request, comment_pk=None):
         serializer_instance = self.get_object()
         if serializer_instance.writer_id == request.user.id:
             self.perform_destroy(serializer_instance)
@@ -119,7 +118,7 @@ class CommentUpdateDeleteAPIView(mixins.DestroyModelMixin, generics.UpdateAPIVie
 
 
 class ArticleUpvoteAPIView(generics.UpdateAPIView):
-    serializer_class = ArticleSerializer
+    serializer_class = VoteSerializer
     lookup_url_kwarg = 'article_pk'
 
     def get_queryset(self):
@@ -148,7 +147,7 @@ class ArticleUpvoteAPIView(generics.UpdateAPIView):
 
 
 class ArticleDownvoteAPIView(generics.UpdateAPIView):
-    serializer_class = ArticleSerializer
+    serializer_class = VoteSerializer
     lookup_url_kwarg = 'article_pk'
 
     def get_queryset(self):
