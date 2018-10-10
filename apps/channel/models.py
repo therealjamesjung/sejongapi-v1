@@ -2,11 +2,15 @@ from django.db import models
 
 from apps.utils.models import TimestampedModel
 
+from django.template.defaultfilters import slugify
+
 
 class Channel(TimestampedModel):
     name = models.CharField(max_length=64, unique=True)
     description = models.TextField(blank=True)
     rules = models.TextField(blank=True)
+
+    slug = models.SlugField(default = slugify(name))
 
     moderators = models.ManyToManyField('profile.Profile', related_name='moderators')
     subscribers = models.ManyToManyField('profile.Profile', related_name='subscriptions')

@@ -8,6 +8,8 @@ from .models import Channel
 from .serializers import ChannelCreateSerializer, ChannelRetrieveSerializer, ChannelUpdateSerializer, \
     SubscribeSerializer
 
+from django.template.defaultfilters import slugify
+from django.shortcuts import get_object_or_404
 
 class ChannelListCreateAPIView(ListCreateAPIView):
     permission_classes = (IsAuthenticated,)
@@ -19,7 +21,8 @@ class ChannelListCreateAPIView(ListCreateAPIView):
         serializer.is_valid(raise_exception=True)
         serializer.save(
             moderators=request.data.get('moderators', {request.user.profile}),
-            subscribers=request.data.get('subscribers', {request.user.profile})
+            subscribers=request.data.get('subscribers', {request.user.profile}),
+            slug=slugify(request.data.get('name'))
         )
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
@@ -30,11 +33,11 @@ class ChannelRetrieveUpdateAPIView(RetrieveUpdateAPIView):
     retrieve_serializer_class = ChannelRetrieveSerializer
     update_serializer_class = ChannelUpdateSerializer
 
-    def retrieve(self, request, channel_pk=None, *args, **kwargs):
+    def retrieve(self, request, channel_slug=None, *args, **kwargs):
         try:
-            channel = self.queryset.get(pk=channel_pk)
+            channel = self.queryset.get(slug=channel_slug)
         except Channel.DoesNotExist:
-            raise NotFound('A channel with this pk does not found.')
+            raise NotFound('A channel with this slug is not found.')
 
         if request.user.profile in channel.blacklist.all():
             raise PermissionDenied('This user does not have permission to view this channel.')
@@ -46,7 +49,7 @@ class ChannelRetrieveUpdateAPIView(RetrieveUpdateAPIView):
         try:
             channel = self.queryset.get(pk=channel_pk)
         except Channel.DoesNotExist:
-            raise NotFound('A channel with this pk does not found.')
+            raise NotFound('A channel with this slug is not found.')
 
         if request.user.profile not in channel.moderators.all():
             raise PermissionDenied('This user does not have permission to update this channel.')
@@ -62,15 +65,15 @@ class ChannelRetrieveUpdateAPIView(RetrieveUpdateAPIView):
 
 class ChannelSubscribeAPIView(UpdateAPIView):
     serializer_class = SubscribeSerializer
-    lookup_url_kwarg = 'channel_pk'
+    lookup_url_kwarg = 'channel_slug'
 
     def get_queryset(self):
-        channel_pk = self.kwargs.get('channel_pk')
-        queryset = Channel.objects.filter(id=channel_pk)
+        channel_slug = self.kwargs.get('channel_slug')
+        queryset = Channel.objects.filter(slug=channel_slug)
         return queryset
 
     def update(self, request, *args, **kwargs):
-        serializer_instance = self.get_object()
+        serializer_instance = get_object_or_404(self.get_queryset())
         for data in serializer_instance.get_subscribers().all():
             if data == request.user.profile:
                 return Response('You are already subscribing this channel.')
@@ -83,15 +86,15 @@ class ChannelSubscribeAPIView(UpdateAPIView):
 
 class ChannelUnsubscribeAPIView(UpdateAPIView):
     serializer_class = SubscribeSerializer
-    lookup_url_kwarg = 'channel_pk'
+    lookup_url_kwarg = 'channel_slug'
 
     def get_queryset(self):
-        channel_pk = self.kwargs.get('channel_pk')
-        queryset = Channel.objects.filter(id=channel_pk)
+        channel_slug = self.kwargs.get('channel_slug')
+        queryset = Channel.objects.filter(slug=channel_slug)
         return queryset
 
     def update(self, request, *args, **kwargs):
-        serializer_instance = self.get_object()
+        serializer_instance = get_object_or_404(self.get_queryset())
         for data in serializer_instance.get_subscribers().all():
             if data == request.user.profile:
                 serializer_instance.remove_subscriber(request.user.profile)
