@@ -3,7 +3,8 @@ from django.urls import path
 from .views import (
     ChannelListCreateAPIView,
     ChannelRetrieveUpdateAPIView,
-    ChannelSubscribeAPIView, ChannelUnsubscribeAPIView
+    ChannelSubscribeAPIView,
+    ChannelUnsubscribeAPIView
 )
 
 app_name = 'channel'
