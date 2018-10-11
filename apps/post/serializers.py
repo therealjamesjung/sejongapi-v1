@@ -37,3 +37,8 @@ class CommentSerializer(serializers.ModelSerializer):
         model = Comment
         fields = '__all__'
         read_only_fields = ('writer', 'post', )
+
+class VoteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Article
+        fields = ('upvoted', 'downvoted')

@@ -10,7 +10,7 @@ from .views import (
 app_name = 'channel'
 urlpatterns = [
     path('channels/', ChannelListCreateAPIView.as_view()),
-    path('channels/<int:channel_pk>/', ChannelRetrieveUpdateAPIView.as_view()),
-    path('channels/<int:channel_pk>/subscribe/', ChannelSubscribeAPIView.as_view()),
-    path('channels/<int:channel_pk>/unsubscribe/', ChannelUnsubscribeAPIView.as_view()),
+    path('<str:channel_slug>/', ChannelRetrieveUpdateAPIView.as_view()),
+    path('<str:channel_slug>/subscribe/', ChannelSubscribeAPIView.as_view()),
+    path('<str:channel_slug>/unsubscribe/', ChannelUnsubscribeAPIView.as_view()),
 ]
