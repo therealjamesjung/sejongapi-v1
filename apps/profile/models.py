@@ -1,6 +1,9 @@
 from django.db import models
 
-class Profile(models.Model):
+from apps.utils.models import TimestampedModel
+
+
+class Profile(TimestampedModel):
     user = models.OneToOneField('authentication.User', on_delete=models.CASCADE)
     bio = models.TextField(blank=True)
     avatar = models.URLField(blank=True)

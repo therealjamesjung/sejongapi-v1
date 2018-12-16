@@ -2,15 +2,16 @@ from rest_framework import serializers
 
 from .models import Profile
 
-
 class ProfileSerializer(serializers.ModelSerializer):
     username = serializers.CharField(source='user.username')
     bio = serializers.CharField(allow_blank=True, required=False)
     avatar = serializers.SerializerMethodField()
 
+    subscriptions = serializers.SlugRelatedField(read_only=True, many=True,slug_field='slug')
+
     class Meta:
         model = Profile
-        fields = ('username', 'bio', 'avatar', 'followers')
+        fields = ('username', 'bio', 'avatar', 'followers', 'subscriptions', 'id', 'created_at', 'updated_at',)
         read_only_fields = ('username', )
 
     def get_avatar(self, obj):
@@ -19,7 +20,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 
         # TODO: Add default 'blank' avatar url
         return ''
-        
+
 
 class FollowerSerializer(serializers.ModelSerializer):
     class Meta:

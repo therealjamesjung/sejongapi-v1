@@ -1,9 +1,16 @@
 from django.urls import path
 
-from .views import ChannelCreateAPIView, ChannelRetrieveUpdateAPIView
+from .views import (
+    ChannelListCreateAPIView,
+    ChannelRetrieveUpdateAPIView,
+    ChannelSubscribeAPIView,
+    ChannelUnsubscribeAPIView
+)
 
 app_name = 'channel'
 urlpatterns = [
-    path('channels/', ChannelCreateAPIView.as_view()),
-    path('channels/<int:channel_pk>/', ChannelRetrieveUpdateAPIView.as_view()),
+    path('channels/', ChannelListCreateAPIView.as_view()),
+    path('<str:channel_slug>/', ChannelRetrieveUpdateAPIView.as_view()),
+    path('<str:channel_slug>/subscribe/', ChannelSubscribeAPIView.as_view()),
+    path('<str:channel_slug>/unsubscribe/', ChannelUnsubscribeAPIView.as_view()),
 ]
